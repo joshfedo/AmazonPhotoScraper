@@ -32,6 +32,7 @@ class Amazon_Image_Scraper
 			$count = 0;
 			foreach ($links as $link) {
 
+				//TODO implement a more robust filter that will accespt all amazon products
 				if (strpos($link->getAttribute('src'), "https://images-na.ssl-images-amazon.com/images/I/") !== false && strpos($link->getAttribute('src'), "SS40") !== false) {
 
 					$image = ($link->getAttribute('src'));

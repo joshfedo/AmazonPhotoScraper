@@ -12,7 +12,7 @@ class Amazon_Image_Scraper
 	 * @param $asin , string, The item you want photos for
 	 * @param $storage_loc , string, a path to the storage location
 	 */
-	public function get_image($asin, $storage_loc)
+	public function get_image($name,$asin, $storage_loc)
 	{
 		if ($this->asin_is_unique($asin, $storage_loc) && $this->file_path_check($storage_loc)) {
 
@@ -32,8 +32,7 @@ class Amazon_Image_Scraper
 			$count = 0;
 			foreach ($links as $link) {
 
-				//TODO implement a more robust filter that will accespt all amazon products
-				if (strpos($link->getAttribute('src'), "https://images-na.ssl-images-amazon.com/images/I/") !== false && strpos($link->getAttribute('src'), "SS40") !== false) {
+				if (strpos($link->getAttribute('src'), "https://images-na.ssl-images-amazon.com/images/I/") !== false && (strpos($link->getAttribute('src'), "SS40") !== false || strpos($link->getAttribute('src'), "_QL70_.") !== false ) ) {
 
 					$image = ($link->getAttribute('src'));
 					echo "$image     ";
@@ -42,13 +41,12 @@ class Amazon_Image_Scraper
 					echo "<a href='$image'>$asin</a><br>";
 
 					$raw = $this->curl_request($image);
-					$fp = fopen('photos\\' . $asin . "_$count.jpg", 'wb');
+					$fp = fopen('photos\\' . $name . "_$count.jpg", 'wb');
 					fwrite($fp, $raw);
 					fclose($fp);
 					$count++;
 
 				}
-
 			}
 		}
 	}

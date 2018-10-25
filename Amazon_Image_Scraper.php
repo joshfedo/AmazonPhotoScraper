@@ -6,17 +6,17 @@
  * Time: 3:11 PM
  */
 
-class Amazon_Image_Scraper
+class AmazonImageScraper
 {
 	/**
 	 * @param $asin , string, The item you want photos for
 	 * @param $storage_loc , string, a path to the storage location
 	 */
-	public function get_image($name,$asin, $storage_loc)
+	public function getImage($name,$asin, $storage_loc)
 	{
-		if ($this->asin_is_unique($asin, $storage_loc) && $this->file_path_check($storage_loc)) {
+		if ($this->asin_is_unique($asin, $storage_loc) && $this->filePathCheck($storage_loc)) {
 
-			$html = $this->curl_request('https://www.amazon.com/dp/' . $asin);
+			$html = $this->curlRequest('https://www.amazon.com/dp/' . $asin);
 			@$dom = new DOMDocument;
 			libxml_use_internal_errors(true);
 			if (!$dom->loadHTML($html)) {
@@ -39,8 +39,7 @@ class Amazon_Image_Scraper
 
 					$image = substr($image, 0, -9) . "SL1500_.jpg";
 					echo "<a href='$image'>$asin</a><br>";
-
-					$raw = $this->curl_request($image);
+					$raw = $this->curlRequest($image);
 					$fp = fopen('photos\\' . $name . "_$count.jpg", 'wb');
 					fwrite($fp, $raw);
 					fclose($fp);
@@ -55,7 +54,7 @@ class Amazon_Image_Scraper
 	 * @param $file_path , string, a path to the storage location
 	 * @return bool
 	 */
-	private function file_path_check($file_path)
+	private function filePathCheck($file_path)
 	{
 		if (!file_exists($file_path)) {
 			mkdir($file_path, 0777, true);
@@ -68,10 +67,10 @@ class Amazon_Image_Scraper
 	 * @param $storage_loc , string, a path to the storage location
 	 * @return bool
 	 */
-	private function asin_is_unique($asin, $storage_loc)
+	private function asinIsUnique($asin, $storage_loc)
 	{
 		if (file_exists("$storage_loc/$asin" . "_0.jpg")) {
-			echo '<hR>We already have photos for this item<HR>';
+			echo 'We already have photos for this item';
 			return false;
 		}
 		return true;
@@ -81,7 +80,7 @@ class Amazon_Image_Scraper
 	 * @param $link
 	 * @return mixed curl results
 	 */
-	private function curl_request($link)
+	private function curlRequest($link)
 	{
 		$ch = curl_init($link);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
